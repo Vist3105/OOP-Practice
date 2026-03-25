@@ -6,14 +6,14 @@
 * Викладач: Подунова А. О.
 # Завдання 
 ## ⭐ Завдання 1
-### 📌 test
+### 📌 [Link](/Practice/Task1/task.md)
 ## ⭐ Завдання 2
-### 📌 test
+### 📌 [Link](/Practice/Task2/task.md)
 ## ⭐ Завдання 3
-### 📌 test
+### 📌 [Link](/Practice/Task3/task.md)
 ## ⭐ Завдання 4
-### 📌 test
+### 📌 [Link](/Practice/Task4/task.md)
 ## ⭐ Завдання 5
-### 📌 test
+### 📌 [Link](/Practice/Task5/task.md)
 ## ⭐ Завдання 6
-### 📌 test
+### 📌 [Link](/Practice/Task6/task.md)
