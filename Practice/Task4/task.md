@@ -204,8 +204,13 @@ public class ViewableTable extends ViewableResult {
 	
 	/** Creates display object {@linkplain ViewTable} */
 	@Override
-	public View getView() {
+	public View getView() { //method overriding
 		return new ViewTable();
+	}
+	
+	/** Creates display object {@linkplain ViewTable} */
+	public View getView(int width, int amount) { //method overloading
+		return new ViewTable(width, amount);
 	}
 }
 ```
@@ -296,8 +301,8 @@ public class MainTest {
 }
 ```
 ## 📊 Виконання завдань та коду
-1. --<p>За основу використовувати вихідний текст проекту попередньої лабораторної роботи Використовуючи шаблон проектування Factory Method (Virtual Constructor), розширити ієрархію похідними класами, реалізують методи для подання результатів у вигляді текстової таблиці. Параметри відображення таблиці мають визначатися користувачем.</p>
-2. --<p>Продемонструвати заміщення (перевизначення, overriding), поєднання (перевантаження, overloading), динамічне призначення методів (Пізнє зв'язування, поліморфізм, dynamic method dispatch).</p>
-3. --<p>Підключено клас Main з package2 який забезпечує діалоговий інтерфейс із користувачем.</p>
+1. <p>Розроблено клас ViewTable який продовжує клас ViewResult для подання результатів у вигляді текстової таблиці. Створена перегрузка методу getView у ViewableTable, за допомогою якої користувач може задати свої параметри відображення таблиці в методі main класу Main.</p>
+2. <p>Розроблено клас ViewTable який демонструє перелічені функції.</p>
+3. <p>Підключено клас Main з package2 який забезпечує діалоговий інтерфейс із користувачем.</p>
 4. <p>Розроблено клас MainTest для тестування основної функціональності.</p>
-5. Використано докладні коментарі для автоматичної генерації документації засобами javadoc. [Результат](/Practice/Task3/doc)
+5. Використано докладні коментарі для автоматичної генерації документації засобами javadoc. [Результат](/Practice/Task4/doc)
