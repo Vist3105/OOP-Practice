@@ -1,441 +1,701 @@
-# 📘 Завдання 2
+# 📘 Завдання 6
 ## ⭐ Задача
-1. <p>Розробити клас, що серіалізується, для зберігання параметрів і результатів обчислень.</p>
-2. <p>Використовуючи агрегування, розробити клас для знаходження рішення задачі.</p>
-3. <p>Розробити клас для демонстрації в діалоговому режимі збереження та відновлення стану об'єкта, використовуючи серіалізацію. Показати особливості використання transient полів.</p>
-4. <p>Розробити клас для тестування коректності результатів обчислень та серіалізації/десеріалізації.</p>
-5. <p>Використовувати докладні коментарі для автоматичної генерації документації засобами javadoc.</p>
-6. <p>Виконати індивідуальне завдання згідно номеру в списку.</p>
+1. <p>Продемонструвати можливість паралельної обробки елементів колекції (пошук мінімуму, максимуму, обчислення середнього значення, відбір за критерієм, статистична обробка тощо).</p>
+2. <p>Управління чергою завдань (команд) реалізувати за допомогою шаблону Worker Thread.</p>
 
 ## 📝 Код
-### Код классу Calc
-```java
-package package1;
-
-import java.io.IOException;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-
-/** Contains realization of methods for calculation and output of the results.
-* @author vit3105
-* @version 1.0
-*/
-public class Calc {
-
-  /** Name of the file used for serialization. */
-  private static final String FNAME = "Item2d.bin";
-
-  /** Saves calculations result. Object of class {@linkplain Item2d} */
-  private Item2d result;
-
-  /** Initializes {@linkplain Calc#result} */
-  public Calc() {
-    result = new Item2d();
-  }
-
-  /** Set the value {@linkplain Calc#result}
-  * @param result - new value of link to object {@linkplain Item2d}
-  */
-  public void setResult(Item2d result) {
-    this.result = result;
-  }
-
-  /** Get value {@linkplain Calc#result}
-  * @return current value of link to object {@linkplain Item2d}
-  */
-  public Item2d getResult() {
-    return result;
-  }
-
-  /** Calculates the value of a function.
-  * @param x - argument of calculated function.
-  * @return result of function calculation.
-  */
-  private double calc(double x) {
-    return Math.sin(x * Math.PI / 180);
-  }
-
-  /** Calculates the value of a function and saves
-  * result in object {@linkplain Calc#result}
-  * @param x - argument of calculated function.
-  */
-  public double init(double x ) {
-    result.setX(x);
-    return result.setY(calc(x));
-  }
-
-  /** Outputs calculations result. */
-    public void show() {
-    System.out.println(result);
-  }
-
-  /** Saves {@linkplain Calc#result} in file {@linkplain Calc#FNAME}
-  * @throws IOException
-  */
-  public void save() throws IOException {
-    ObjectOutputStream os = new ObjectOutputStream(new
-    FileOutputStream(FNAME));
-    os.writeObject(result);
-    os.flush();
-    os.close();
-  }
-
-  /** Restores {@linkplain Calc#result} from file {@linkplain Calc#FNAME}
-  * @throws Exception
-  */
-  public void restore() throws Exception {
-    ObjectInputStream is = new ObjectInputStream(new FileInputStream(FNAME));
-    result = (Item2d)is.readObject();
-    is.close();
-  }
-}
-```
 ### Код классу Main
 ```java
-package package1;
+package package5;
 
-import java.io.IOException;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import package2.View;
+import package2.ViewableResult;
+import package4.ChangeConsoleCommand;
+import package4.GenerateConsoleCommand;
+import package4.Menu;
+import package4.ViewConsoleCommand;
 
-/** Calculation and output of results.
-* Contains realization of static method main().
+/** Calculation and display of
+* results; contains realization of
+* static method main()
 * @author vit3105
-* @version 1.0
+* @version 5.0
 * @see Main#main
 */
 public class Main {
-
-  /** Object of class {@linkplain Calc}.<br> Solves the task. */
-  private Calc calc = new Calc();
-
-  /** Object of class {@linkplain SpecialTask10}.<br> Solves my special task 10. */
-  private SpecialTask10 ST10 = new SpecialTask10();
-
-  /** Displays menu. */
-  private void menu() {
-
-    String s = null;
-
-    BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-
-    do {
-
-      do {
-
-        System.out.println("Enter command...");
-        System.out.print("'q'uit, 'v'iew, 'g'enerate, 's'ave, 'r'estore, 't'ask10: ");
-
-        try {
-          s = in.readLine();
-        } catch(IOException e) {
-          System.out.println("Error: " + e);
-          System.exit(0);
-        }
-      } while (s.length() != 1);
-
-      switch (s.charAt(0)) {
-
-        case 'q':
-          System.out.println("Exit.");
-          break;
-
-        case 'v':
-          System.out.println("View current.");
-          calc.show();
-          break;
-
-        case 'g':
-          System.out.println("Random generation.");
-          calc.init(Math.random() * 360.0);
-          calc.show();
-          break;
-
-        case 's':
-          System.out.println("Save current.");
-          try {
-            calc.save();
-          } catch (IOException e) {
-            System.out.println("Serialization error: " + e);
-          }
-          calc.show();
-          break;
-
-        case 'r':
-          System.out.println("Restore last saved.");
-          try {
-            calc.restore();
-          } catch (Exception e) {
-            System.out.println("Serialization error: " + e);
-          }
-          calc.show();
-          break;
-
-        case 't':
-	        try {
-		        ST10.Execute();
-	        } catch (Exception e) {
-		        System.out.println("Task 10 execution error: " + e);
-	        }
-	        ST10.ShowOct();
-	        ST10.ShowHex();
-	        break;
-
-        default:
-          System.out.print("Wrong command. ");
-
-      }
-    } while(s.charAt(0) != 'q');
-  }
-
-  /** Executes at the start of the programm.
-  * Calculates function value for different arguments.
-  * Calculation results outputed on the screen.
-  * @param args - parameters of program execution.
-  */
-  public static void main(String[] args) {
-    Main main = new Main();
-    main.menu();
-  }
-}
-```
-
-### Код классу Item2d
-```java
-package package1;
-
-import java.io.Serializable;
-
-/** Stores the original data and the result of calculations.
-* @author vit3105
-* @version 1.0
-*/
-public class Item2d implements Serializable {
-
-  /** Argument of calculated function. */
-  // transient
-  private double x;
-
-  /** Result of function calculations. */
-  private double y;
-
-  /** Automatically generated constant */
-  private static final long serialVersionUID = 1L;
-
-  /** Initializing fields {@linkplain Item2d#x}, {@linkplain Item2d#y} */
-  public Item2d() {
-    x = .0;
-    y = .0;
-  }
-
-  /** Sets values of fields: argument
-  * and result of function calculations.
-  * @param x - value for initialization of field {@linkplain Item2d#x}
-  * @param y - value for initialization of field {@linkplain Item2d#y}
-  */
-  public Item2d(double x, double y) {
-    this.x = x;
-    this.y = y;
-  }
-
-  /** Setting value of field {@linkplain Item2d#x}
-  * @param x - value for {@linkplain Item2d#x}
-  * @return Value {@linkplain Item2d#x}
-  */
-  public double setX(double x) {
-    return this.x = x;
-  }
-
-  /** Getting value of field {@linkplain Item2d#x}
-  * @return Value {@linkplain Item2d#x}
-  */
-  public double getX() {
-    return x;
-  }
-
-  /** Setting value of field {@linkplain Item2d#y}
-  * @param y - value for {@linkplain Item2d#y}
-  * @return Value {@linkplain Item2d#y}
-  */
-  public double setY(double y) {
-    return this.y = y;
-  }
-
-  /** Getting value of field {@linkplain Item2d#y}
-  * @return Value {@linkplain Item2d#y}
-  */
-  public double getY() {
-    return y;
-  }
-
-  /** Setting value of {@linkplain Item2d#x} and {@linkplain Item2d#y}
-  * @param x - value for {@linkplain Item2d#x}
-  * @param y - value for {@linkplain Item2d#y}
-  * @return this
-  */
-  public Item2d setXY(double x, double y) {
-    this.x = x;
-    this.y = y;
-    return this;
-  }
-
-  /** Represents result of calculations in the form of string.<br>{@inheritDoc} */
-  @Override
-  public String toString() {
-    return "x = " + x + ", y = " + y;
-  }
-
-  /** Automatically generated method.<br>{@inheritDoc} */
-  @Override
-  public boolean equals(Object obj) {
-
-    if (this == obj)
-      return true;
-
-    if (obj == null)
-      return false;
-
-    if (getClass() != obj.getClass())
-      return false;
-
-    Item2d other = (Item2d) obj;
-
-    if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x))
-      return false;
-
-    // changed comparison of function result
-    if (Math.abs(Math.abs(y) - Math.abs(other.y)) > .1e-10)
-      return false;
-
-    return true;
-  }
-}
-```
-
-### Код классу MainTest
-```java
-package package1;
-
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import junit.framework.Assert;
-import java.io.IOException;
-import package1.Calc;
-
-/** Executes testing of developed classes.
-* @author vit3105
-* @version 1.0
-*/
-public class MainTest {
-
-  /** Main functionality test of class {@linkplain Calc} */
-  @Test
-  public void testCalc() {
-
-    Calc calc = new Calc();
-    calc.init(0.0);
-    assertEquals(0.0, calc.getResult().getY(), .1e-10);
-
-    calc.init(90.0);
-    assertEquals(1.0, calc.getResult().getY(), .1e-10);
-
-    calc.init(180.0);
-    assertEquals(0.0, calc.getResult().getY(), .1e-10);
-
-    calc.init(270.0);
-    assertEquals(-1.0, calc.getResult().getY(), .1e-10);
-
-    calc.init(360.0);
-    assertEquals(0.0, calc.getResult().getY(), .1e-10);
-  }
-
-  /** Serialization test. Correctness of data recovery. */
-  @Test
-  public void testRestore() {
-
-    Calc calc = new Calc();
-
-    double x, y;
-
-    for(int ctr = 0; ctr < 1000; ctr++) {
-
-      x = Math.random() * 360.0;
-      y = calc.init(x);
-
-      try {
-        calc.save();
-      } catch (IOException e) {
-        Assert.fail(e.getMessage());
-      }
-
-      calc.init(Math.random() * 360);
-
-      try {
-        calc.restore();
-      } catch (Exception e) {
-        Assert.fail(e.getMessage());
-      }
-
-      assertEquals(y, calc.getResult().getY(), .1e-10);
-      assertEquals(x, calc.getResult().getX(), .1e-10);
-    }
-  }
-}
-```
-
-### Код классу SpecialTask10
-```java
-package package1;
-
-import java.util.*;
-
-/** Executes special task 10.
-* @author vit3105
-* @version 1.0
-*/
-public class SpecialTask10 {
 	
-	private int OctNumber = 0;
-	private int HexNumber = 0;
+	/** Object implementing interface {@linkplain View};
+	* maintains object collection of {@linkplain package1.Item2d};
+	* initializing with Factory Method
+	*/
+	private View view = new ViewableResult().getView();
+	
+	/** Object of the class {@linkplain Menu};
+	* macro command (template Command)
+	*/
+	private Menu menu = new Menu();
+	
+	/** User command processing */
+	public void run() {
+		menu.add(new ViewConsoleCommand(view));
+		menu.add(new GenerateConsoleCommand(view));
+		menu.add(new ChangeConsoleCommand(view));
+		menu.add(new ExecuteConsoleCommand(view));
+		menu.execute();
+	}
+	
+	/** Executes on the program launch
+	* @param args program launch parameters
+	*/
+	public static void main(String[] args) {
+		Main main = new Main();
+		main.run();
+	}
+}
+```
+### Код інтерфейсу Queue
+```java
+package package5;
 
-  /** Executes main the task. */
-	public void Execute() {
-		Scanner input = new Scanner(System.in);
-		System.out.print("Input decimal number: ");
-		int DecimalNumber = input.nextInt();
-		OctNumber = 0;
-		HexNumber = 0;
-		while (DecimalNumber > 0) {
-			int LastDigit = DecimalNumber % 10;
-			
-			if (LastDigit < 8) {
-				OctNumber++;
-            }
-			
-			HexNumber++;
-			DecimalNumber /= 10;
+import package4.Command;
+
+/** Represents methods
+* for putting and taking
+* tasks by queue handler;
+* template Worker Thread
+* @author vit3105
+* @version 1.0
+* @see Command
+*/
+public interface Queue {
+	
+	/** Adds new task in a queue;
+	* template Worker Thread
+	* @param cmd command
+	*/
+	void put(Command cmd);
+	
+	/** Deletes task from queue;
+	* template Worker Thread
+	* @return deletable task
+	*/
+	Command take();
+}
+```
+### Код классу CommandQueue
+```java
+package package5;
+
+import java.util.Vector;
+import package4.Command;
+
+/** Creates flow processor
+* which executes objects
+* with the interface
+* Command; template
+* Worker Thread
+* @author vit3105
+* @version 1.0
+* @see Command
+*/
+public class CommandQueue implements Queue {
+	
+	/** Task queue */
+	private Vector<Command> tasks;
+	
+	/** Waiting flag */
+	private boolean waiting;
+	
+	/** Completion flag */
+	private boolean shutdown;
+	
+	/** Sets completion flag */
+	public void shutdown() {
+		shutdown = true;
+	}
+	
+	/** Initialization of {@linkplain CommandQueue#tasks}
+	* {@linkplain CommandQueue#waiting}
+	* {@linkplain CommandQueue#waiting};
+	* creates queue for class {@linkplain CommandQueue.Worker}
+	*/
+	public CommandQueue() {
+		tasks = new Vector<Command>();
+		waiting = false;
+		new Thread(new Worker()).start();
+	}
+	
+	@Override
+	public void put(Command r) {
+		tasks.add(r);
+		if (waiting) {
+			synchronized (this) {
+				notifyAll();
+			}
 		}
 	}
-
-  /** Shows the value saved in OctNumber. */
-	public void ShowOct() {
-		System.out.println("Octal numbers count: " + OctNumber);
+	
+	@Override
+	public Command take() {
+		if (tasks.isEmpty()) {
+			synchronized (this) {
+				waiting = true;
+				try {
+					wait();
+				} catch (InterruptedException ie) {
+					waiting = false;
+				}
+			}
+		}
+		return (Command)tasks.remove(0);
 	}
-
-  /** Shows the value saved in HexNumber. */
-	public void ShowHex() {
-		System.out.println("Hexadecimal  numbers count: " + HexNumber);
+	
+	/** Maintains task
+	* queue; template
+	* Worker Thread
+	* @author vit3105
+	* @version 1.0
+	* @see Runnable
+	*/
+	private class Worker implements Runnable {
+		
+		/** Extracts ready to
+		* execute tasks from
+		* queue; template
+		* Worker Thread */
+		public void run() {
+			while (!shutdown) {
+				Command r = take();
+				r.execute();
+			}
+		}
 	}
 }
+```
+### Код классу ExecuteConsoleCommand
+```java
+package package5;
 
+import java.util.concurrent.TimeUnit;
+import package2.View;
+import package2.ViewResult;
+import package4.ConsoleCommand;
+
+/** Console command
+* Execute all threads;
+* template Command
+* @author vit3105
+* @version 1.0
+*/
+public class ExecuteConsoleCommand implements ConsoleCommand {
+	
+	/** Object implementing interface {@linkplain View};
+	* maintains object collection of {@linkplain package1.Item2d}
+	*/
+	private View view;
+	
+	/** Returns field {@linkplain ExecuteConsoleCommand#view}
+	* @return value {@linkplain ExecuteConsoleCommand#view}
+	*/
+	public View getView() {
+		return view;
+	}
+	
+	/** Sets field {@linkplain ExecuteConsoleCommand#view}
+	* @param view value for {@linkplain ExecuteConsoleCommand#view}
+	* @return new value {@linkplain ExecuteConsoleCommand#view}
+	*/
+	public View setView(View view) {
+		return this.view = view;
+	}
+	
+	/** Initializes field {@linkplain ExecuteConsoleCommand#view}
+	* @param view object implementing {@linkplain View}
+	*/
+	public ExecuteConsoleCommand(View view) {
+		this.view = view;
+	}
+	
+	@Override
+	public char getKey() {
+		return 'e';
+	}
+	
+	@Override
+	public String toString() {
+		return "'e'xecute";
+	}
+	
+	@Override
+	public void execute() {
+		
+		CommandQueue queue1 = new CommandQueue();
+		CommandQueue queue2 = new CommandQueue();
+		
+		MaxCommand maxCommand = new MaxCommand((ViewResult)view);
+		AvgCommand avgCommand = new AvgCommand((ViewResult)view);
+		MinMaxCommand minMaxCommand = new MinMaxCommand((ViewResult)view);
+		
+		System.out.println("Execute all threads...");
+		
+		queue1.put(minMaxCommand);
+		queue2.put(maxCommand);
+		queue2.put(avgCommand);
+		
+		try {
+			while (avgCommand.running() ||
+					maxCommand.running() ||
+					minMaxCommand.running()) {
+				TimeUnit.MILLISECONDS.sleep(100);
+			}
+			queue1.shutdown();
+			queue2.shutdown();
+			TimeUnit.SECONDS.sleep(1);
+		} catch (InterruptedException e) {
+			System.err.println(e);
+		}
+		System.out.println("All done.");
+	}
+}
+```
+### Код классу MaxCommand
+```java
+package package5;
+
+import java.util.concurrent.TimeUnit;
+import package2.ViewResult;
+import package4.Command;
+
+/** Command used by
+* queue processor;
+* template Worker Thread
+* @author vit3105
+* @version 1.0
+* @see Command
+* @see CommandQueue
+*/
+public class MaxCommand implements Command /*, Runnable */ {
+	
+	/** Stores the result of processing collection */
+	private int result = -1;
+	
+	/** Result readiness flag */
+	private int progress = 0;
+	
+	/** Maintains object collection of {@linkplain package1.Item2d} */
+	private ViewResult viewResult;
+	
+	/** Returns field {@linkplain MaxCommand#viewResult}
+	* @return value {@linkplain MaxCommand#viewResult}
+	*/
+	public ViewResult getViewResult() {
+		return viewResult;
+	}
+	
+	/** Sets field {@linkplain MaxCommand#viewResult}
+	* @param viewResult value for {@linkplain MaxCommand#viewResult}
+	* @return new value {@linkplain MaxCommand#viewResult}
+	*/
+	public ViewResult setViewResult(ViewResult viewResult) {
+		return this.viewResult = viewResult;
+	}
+	
+	/** Initializes field {@linkplain MaxCommand#viewResult}
+	* @param viewResult object of the class {@linkplain ViewResult}
+	*/
+	public MaxCommand(ViewResult viewResult) {
+		this.viewResult = viewResult;
+	}
+	
+	/** Returns result
+	* @return field {@linkplain MaxCommand#result}
+	*/
+	public int getResult() {
+		return result;
+	}
+	
+	/** Checks result readiness
+	* @return false - if result found, else - true
+	* @see MaxCommand#result
+	*/
+	public boolean running() {
+		return progress < 100;
+	}
+	
+	/** Used by the queue handler {@linkplain CommandQueue};
+	* template Worker Thread
+	*/
+	@Override
+	public void execute() {
+		
+		progress = 0;
+		System.out.println("Max executed...");
+		int size = viewResult.getItems().size();
+		result = 0;
+		for (int idx = 1; idx < size; idx++) {
+			if (viewResult.getItems().get(result).getY() <
+					viewResult.getItems().get(idx).getY()) {
+				result = idx;
+			}
+			progress = idx * 100 / size;
+			if (idx % (size / 3) == 0) {
+				System.out.println("Max " + progress + "%");
+			}
+			try {
+				TimeUnit.MILLISECONDS.sleep(3000 / size);
+			} catch (InterruptedException e) {
+				System.err.println(e);
+			}
+		}
+		
+		System.out.println("Max done. Item #" + result + " found: " + viewResult.getItems().get(result));
+
+		progress = 100;
+	}
+}
+```
+### Код классу AvgCommand
+```java
+package package5;
+
+import java.util.concurrent.TimeUnit;
+import package1.Item2d;
+import package2.ViewResult;
+import package4.Command;
+
+/** Task, used by
+* queue processor;
+* template Worker Thread
+* @author vit3105
+* @version 1.0
+* @see Command
+* @see CommandQueue
+*/
+public class AvgCommand implements Command {
+	
+	/** Stores the result of processing collection */
+	private double result = 0.0;
+	
+	/** Result readiness flag */
+	private int progress = 0;
+	
+	/** Maintains object collection {@linkplain package1.Item2d} */
+	private ViewResult viewResult;
+	
+	/** Returns field {@linkplain MaxCommand#viewResult}
+	* @return value {@linkplain MaxCommand#viewResult}
+	*/
+	public ViewResult getViewResult() {
+		return viewResult;
+	}
+	
+	/** Sets field {@linkplain MaxCommand#viewResult}
+	* @param viewResult value for {@linkplain MaxCommand#viewResult}
+	* @return new value {@linkplain MaxCommand#viewResult}
+	*/
+	public ViewResult setViewResult(ViewResult viewResult) {
+		return this.viewResult = viewResult;
+	}
+	
+	/** Initializes field {@linkplain MaxCommand#viewResult}
+	* @param viewResult object of the class {@linkplain ViewResult}
+	*/
+	public AvgCommand(ViewResult viewResult) {
+		this.viewResult = viewResult;
+	}
+	
+	/** Returns result
+	* @return field {@linkplain MaxCommand#result}
+	*/
+	public double getResult() {
+		return result;
+	}
+	
+	/** Checks result readiness
+	* @return false - if result found, else - true
+	* @see MaxCommand#result
+	*/
+	public boolean running() {
+		return progress < 100;
+	}
+	
+	/** Used by the queue handler {@linkplain CommandQueue};
+	* template Worker Thread
+	*/
+	@Override
+	public void execute() {
+		progress = 0;
+		System.out.println("Average executed...");
+		result = 0.0;
+		int idx = 1, size = viewResult.getItems().size();
+		for (Item2d item : viewResult.getItems()) {
+			result += item.getY();
+			progress = idx * 100 / size;
+			if (idx++ % (size / 2) == 0) {
+				System.out.println("Average " + progress + "%");
+			}
+			try {
+				TimeUnit.MILLISECONDS.sleep(2000 / size);
+			} catch (InterruptedException e) {
+				System.err.println(e);
+			}
+		}
+		result /= size;
+		System.out.println("Average done. Result = " + String.format("%.2f",result));
+		progress = 100;
+	}
+}
+```
+### Код классу MinMaxCommand
+```java
+package package5;
+
+import java.util.concurrent.TimeUnit;
+import package1.Item2d;
+import package2.ViewResult;
+import package4.Command;
+
+/** Command used by
+* queue processor;
+* template Worker Thread
+* @author vit3105
+* @version 1.0
+* @see Command
+* @see CommandQueue
+*/
+public class MinMaxCommand implements Command {
+	
+	/** Stores the result of processing collection(minimum) */
+	private int resultMin = -1;
+	
+	/** Stores the result of processing collection(maximum) */
+	private int resultMax = -1;
+	
+	/** Result readiness flag */
+	private int progress = 0;
+	
+	/** Maintains object collection of {@linkplain package1.Item2d} */
+	private ViewResult viewResult;
+	
+	/** Returns field {@linkplain MinMaxCommand#viewResult}
+	* @return value {@linkplain MinMaxCommand#viewResult}
+	*/
+	public ViewResult getViewResult() {
+		return viewResult;
+	}
+	
+	/** Sets field {@linkplain MinMaxCommand#viewResult}
+	* @param viewResult value for {@linkplain MinMaxCommand#viewResult}
+	* @return new value {@linkplain MinMaxCommand#viewResult}
+	*/
+	public ViewResult setViewResult(ViewResult viewResult) {
+		return this.viewResult = viewResult;
+	}
+	
+	/** Initializes field {@linkplain MinMaxCommand#viewResult}
+	* @param viewResult object of the class {@linkplain ViewResult}
+	*/
+	public MinMaxCommand(ViewResult viewResult) {
+		this.viewResult = viewResult;
+	}
+	
+	/** Returns result
+	* @return поле {@linkplain MinMaxCommand#resultMin}
+	*/
+	public int getResultMin() {
+		return resultMin;
+	}
+	
+	/** Returns result
+	* @return поле {@linkplain MinMaxCommand#resultMax}
+	*/
+	public int getResultMax() {
+		return resultMax;
+	}
+	
+	/** Checks result readiness
+	* @return false - если результат найден, иначе - true
+	*/
+	public boolean running() {
+		return progress < 100;
+	}
+	
+	/** Used by queue handler {@linkplain CommandQueue};
+	* template Worker Thread
+	*/
+	@Override
+	public void execute() {
+		progress = 0;
+		System.out.println("MinMax executed...");
+		int idx = 0, size = viewResult.getItems().size();
+		for (Item2d item : viewResult.getItems()) {
+			if (item.getY() < 0) {
+				if ((resultMax == -1) || (viewResult.getItems().get(resultMax).getY() < item.getY())) {
+					resultMax = idx;
+				}
+			} else {
+				if ((resultMin == -1) ||
+						(viewResult.getItems().get(resultMin).getY() > item.getY())) {
+					resultMin = idx;
+				}
+			}
+			idx++;
+			progress = idx * 100 / size;
+			if (idx % (size / 5) == 0) {
+				System.out.println("MinMax " + progress + "%");
+			}
+			try {
+				TimeUnit.MILLISECONDS.sleep(5000 / size);
+			} catch (InterruptedException e) {
+				System.err.println(e);
+			}
+		}
+		System.out.print("MinMax done. ");
+		if (resultMin > -1) {
+			
+			System.out.print("Min positive #" + resultMin + " found: " + String.format("%.2f.", viewResult.getItems().get(resultMin).getY()));
+		} else {
+			
+			System.out.print("Min positive not found.");
+		}
+		if (resultMax > -1) {
+			
+	System.out.println(" Max negative #" + resultMax + " found: " + String.format("%.2f.", viewResult.getItems().get(resultMax).getY()));
+		} else {
+			
+			System.out.println(" Max negative item not found.");
+		}
+		
+		progress = 100;
+	}
+}
+```
+### Код классу MainTest
+```java
+package package5;
+
+import static org.junit.Assert.*;
+import java.util.concurrent.TimeUnit;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import package2.ViewResult;
+
+/** Testing of the
+* developed classes
+* @author vit3105
+* @version 5.0
+* @see CommandQueue
+* @see MaxCommand
+* @see AvgCommand
+* @see MinMaxCommand
+*/
+public class MainTest {
+	
+	private final static int N = 1000;
+	private static ViewResult view = new ViewResult(N);
+	private static MaxCommand max1 = new MaxCommand(view);
+	private static MaxCommand max2 = new MaxCommand(view);
+	private static AvgCommand avg1 = new AvgCommand(view);
+	private static AvgCommand avg2 = new AvgCommand(view);
+	private static MinMaxCommand min1 = new MinMaxCommand(view);
+	private static MinMaxCommand min2 = new MinMaxCommand(view);
+	private CommandQueue queue = new CommandQueue();
+	
+	/** Executes first */
+	@BeforeClass
+	public static void setUpBeforeClass() {
+		view.viewInit();
+		assertEquals(N, view.getItems().size());
+	}
+	
+	/** Executes last */
+	@AfterClass
+	public static void tearDownAfterClass() {
+		assertEquals(max1.getResult(), max2.getResult());
+		assertEquals(avg1.getResult(), avg2.getResult(), .1e-10);
+		assertEquals(min1.getResultMax(), min2.getResultMax());
+		assertEquals(min1.getResultMin(), min2.getResultMin());
+	}
+	
+	/** Main functionality test of the class {@linkplain MaxCommand} */
+	@Test
+	public void testMax() {
+		max1.execute();
+		assertTrue( max1.getResult() > -1);
+	}
+	
+	/** Main functionality test of the class {@linkplain AvgCommand} */
+	@Test
+	public void testAvg() {
+		avg1.execute();
+		assertTrue( avg1.getResult() != 0.0);
+	}
+	
+	/** Main functionality test of the class {@linkplain MinMaxCommand} */
+	@Test
+	public void testMin() {
+		min1.execute();
+		assertTrue( min1.getResultMin() > -1);
+		assertTrue( min1.getResultMax() > -1);
+	}
+	
+	/** Main functionality test of the class
+	* {@linkplain CommandQueue} with command {@linkplain MaxCommand}
+	*/
+	@Test
+	public void testMaxQueue() {
+		queue.put(max2);
+		try {
+			while (max2.running()) {
+				TimeUnit.MILLISECONDS.sleep(100);
+			}
+			queue.shutdown();
+			TimeUnit.SECONDS.sleep(1);
+		} catch (InterruptedException e) {
+			fail(e.toString());
+		}
+	}
+	
+	/** Main functionality test of the class
+	* {@linkplain CommandQueue} with command {@linkplain AvgCommand}
+	*/
+	@Test
+	public void testAvgQueue() {
+		queue.put(avg2);
+		try {
+			while (avg2.running()) {
+				TimeUnit.MILLISECONDS.sleep(100);
+			}
+			queue.shutdown();
+			TimeUnit.SECONDS.sleep(1);
+		} catch (InterruptedException e) {
+			fail(e.toString());
+		}
+	}
+	
+	/** Main functionality test of the class
+	* {@linkplain CommandQueue} with command {@linkplain MinMaxCommand}
+	*/
+	@Test
+	public void testMinQueue() {
+		queue.put(min2);
+		try
+		{
+			while
+				(min2.running())
+			{
+				TimeUnit.MILLISECONDS.sleep(100);
+			}
+			queue.shutdown();
+			TimeUnit.SECONDS.sleep(1);
+		} catch (InterruptedException e)
+		{
+			fail(e.toString());
+		}
+	}
+}
 ```
 ## 📊 Виконання завдань та коду</p>
-1. <p>Розроблено клас Item2d який серіалізується.</p>
-2. <p>Розроблено клас Calc для знаходження рішення задачі.</p>
-3. <p>Розроблено клас Main для демонстрації в діалоговому режимі збереження та відновлення стану об'єкта, використовуючи серіалізацію. Серіалізація неможлива так як для оголошення змінної використовується поле transient.</p> <img width="100%" height="auto" alt="Transient field property showcase" src="https://github.com/user-attachments/assets/5f727738-b45b-4bce-a3b9-1cde997fc513" />
-4. <p>Розроблено клас MainTest для тестування коректності результатів обчислень та серіалізації/десеріалізації.</p>
-5. Використано докладні коментарі для автоматичної генерації документації засобами javadoc. [Результат](/Practice/Task2/doc)
-6. Згідно з номером в списку(10), виконав завдання 10, створенням класу SpecialTask10.<img width="100%" height="auto" alt="Execution of special task" src="https://github.com/user-attachments/assets/67b593ee-e070-430d-81ab-53919b6b8503" />
-
+1. <p>Розроблено клас CommandQueue та інтерфейс Queue за допомогою яких продемонстровано можливість паралельної обробки елементів колекції, а для більшої наглядності додано затримку до завдань.</p>
+2. <p>Управління чергою команд реалізовано за допомогою шаблону Worker Thread.</p>
