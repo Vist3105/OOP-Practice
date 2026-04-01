@@ -17,3 +17,5 @@
 ### 📌 [Link](/Practice/Task5/task.md)
 ## ⭐ Завдання 6
 ### 📌 [Link](/Practice/Task6/task.md)
+## ⭐ Завдання 7
+### 📌 [Link](/Practice/Task7/task.md)
